@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.searchWrapper{
+    border:none !important;
+    width:100% !important;
+}
+
+.highlightOption, .multiSelectContainer li:hover{
+    background:#1c1c1c !important;
+}
+

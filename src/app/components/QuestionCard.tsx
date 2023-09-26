@@ -11,9 +11,9 @@ export default function QuestionCard({ question }: {question: Question}){
                 <b>Ayah</b>
                 { question.ayahNumber }
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col text-end">
                 <b>Text</b>
-                <div className="text-2xl">{ question.text }</div>
+                <div className="text-3xl">{ question.text }</div>
             </div>
         </div>
     )

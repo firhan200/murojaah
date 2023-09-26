@@ -8,6 +8,7 @@ import TimeTrack from "./TimeTrack"
 export default function MurojaahGenerator(){
     const { isStarting, questions, interval, isFinish, finish } = useMurojaah()
     const [currentPosition, setCurrentPosition] = useState<number>(0);
+    const [resetTime, setResetTime] = useState<number>(0);
 
     if(!isStarting || interval === null || isFinish){
         return
@@ -26,6 +27,7 @@ export default function MurojaahGenerator(){
             return
         }
 
+
         setCurrentPosition(currentPosition + 1)
     }
 
@@ -43,9 +45,11 @@ export default function MurojaahGenerator(){
 
     return (
         <>
-            <TimeTrack onTimesUp={() => onTimesUp()} max={interval}/>
+            <TimeTrack position={currentPosition} onTimesUp={() => onTimesUp()} max={interval}/>
             <QuestionCard question={renderQuestion()}/>
-            <NextButton />
+            <div className="p-4 text-end">
+                <NextButton />
+            </div>
         </>
     )
 }

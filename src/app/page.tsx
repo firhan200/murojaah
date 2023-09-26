@@ -24,12 +24,12 @@ export default async function Page() {
 	}
 
 	return (
-		<>
+		<div className="container mx-auto lg:max-w-lg p-4">
 			<MurojaahApp>
 				<SurahForm surahs={surahList.data} />
 				<MurojaahGenerator />
 				<Leaderboard />
 			</MurojaahApp>
-		</>
+		</div>
 	)
 }

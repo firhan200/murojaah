@@ -14,7 +14,8 @@ export type MurojaahContextState = {
     questions: Question[],
     generateQuestions: () => void,
     finish: () => void,
-    restart: () => void
+    restart: () => void,
+    reset: () => void
 }
 
 export const MurojaahContext = createContext<MurojaahContextState | null>(null)
@@ -30,12 +31,18 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
         setIsFinish(true)
     }
 
-    const restart = () => {
+    const reset = () => {
         setIsFinish(false)
         setIsStarting(false)
         setQuestions([])
         setListOfSurah([])
         setInterval(null)
+    }
+
+    const restart = async () => {
+        await generateQuestions()
+        setIsFinish(false)
+        setIsStarting(true)
     }
 
     const start = () => {
@@ -115,7 +122,8 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
             generateQuestions,
             isFinish,
             finish,
-            restart
+            restart,
+            reset
         }}>
             { children }
         </MurojaahContext.Provider>

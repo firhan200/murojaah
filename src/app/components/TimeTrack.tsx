@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from "react"
 
-export default function TimeTrack({ max, onTimesUp }: { max: number, onTimesUp: () => void }){
+export default function TimeTrack({ max, onTimesUp, position }: { max: number, onTimesUp: () => void, position: number }) {
     const [progress, setProgress] = useState<number>(0)
 
     useEffect(() => {
-        if(progress >= max){
+        setProgress(0)
+    }, [position])
+
+    useEffect(() => {
+        if (progress >= max) {
             onTimesUp()
             setProgress(0)
             return
@@ -17,11 +21,14 @@ export default function TimeTrack({ max, onTimesUp }: { max: number, onTimesUp: 
         }, 1000)
 
         return () => {
-            clearTimeout(timer) 
+            clearTimeout(timer)
         }
     }, [max, progress, setProgress])
 
     return (
-        <progress className="progress progress-secondary w-full" value={progress} max={max}></progress>
+        <div className="text-end">
+            <progress className="progress progress-secondary w-full" value={progress} max={max}></progress>
+            { `${(max - progress)} seconds left` }
+        </div>
     )
 }

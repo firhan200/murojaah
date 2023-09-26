@@ -42,6 +42,7 @@ export default function SurahSelection({ surahs }: SurahSelectionProps){
 
     return (
         <Multiselect
+            className="select-bordered h-auto"
             options={options} // Options to display in the dropdown
             onSelect={onSelect} // Function will trigger on select event
             onRemove={onRemove} // Function will trigger on remove event
