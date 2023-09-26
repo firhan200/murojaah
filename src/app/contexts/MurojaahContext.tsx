@@ -114,16 +114,23 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
             //get random questions on list of surah range [1,2,3,4,5]
             let randomSurah = listOfSurah[generateRandomInteger(0, (listOfSurah.length - 1))]
             let randomAyahOnSurah = generateRandomInteger(1, randomSurah.numberOfAyahs)
-            let isExist = true
-            while(isExist){
+            let isEnough = false
+            const maxLoop = 10
+            let counter = 0
+            while(isEnough){
+                if(counter >= maxLoop){
+                    isEnough = false
+                    break
+                }
+
                 const key: string = `${randomSurah}:${randomAyahOnSurah}`
                 const isAleadyInArr: string | undefined = questionsTmp.find(keyData => keyData == key)
                 if(typeof isAleadyInArr === "undefined"){
                     questionsTmp.push(key)
-                    isExist = false
-                    break
+                    continue
                 }
 
+                counter++
                 randomSurah = listOfSurah[generateRandomInteger(0, (listOfSurah.length - 1))]
                 randomAyahOnSurah = generateRandomInteger(1, randomSurah.numberOfAyahs)
             }
