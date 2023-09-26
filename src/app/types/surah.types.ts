@@ -24,5 +24,6 @@ export type Ayah = {
     surah: {
         number: number
     },
+    numberInSurah: number,
     text: string
 }

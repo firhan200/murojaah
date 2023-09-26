@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import useMurojaah from "../hooks/useMurojaah"
 import QuestionCard from "./QuestionCard"
 import TimeTrack from "./TimeTrack"
+import QuestionTracker from "./QuestionTracker"
 
 export default function MurojaahGenerator(){
     const { isStarting, questions, interval, isFinish, finish } = useMurojaah()
@@ -20,10 +21,14 @@ export default function MurojaahGenerator(){
         return currentQuestion;
     }
 
+    const finishMurojaah = () => {
+        setCurrentPosition(0)
+        finish()
+    }
+
     const next = () => {
         if(currentPosition >= (questions.length - 1)){
-            setCurrentPosition(0)
-            finish()
+            finishMurojaah()
             return
         }
 
@@ -39,6 +44,10 @@ export default function MurojaahGenerator(){
         return <button onClick={() => next()} className="btn">Next</button>
     }
 
+    const ExitButton = () => {
+        return <button onClick={() => finishMurojaah()} className="btn btn-error">Exit</button>
+    }
+
     const onTimesUp = () => {
         next()
     }
@@ -46,8 +55,10 @@ export default function MurojaahGenerator(){
     return (
         <>
             <TimeTrack position={currentPosition} onTimesUp={() => onTimesUp()} max={interval}/>
+            <QuestionTracker current={(currentPosition + 1)} total={questions.length}/>
             <QuestionCard question={renderQuestion()}/>
-            <div className="p-4 text-end">
+            <div className="p-4 flex justify-between">
+                <ExitButton />
                 <NextButton />
             </div>
         </>

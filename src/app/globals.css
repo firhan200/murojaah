@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 .searchWrapper{
-    border:none !important;
+    border-color:#383f47 !important;
+    padding:10px 5px !important;
     width:100% !important;
 }
 

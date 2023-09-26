@@ -15,7 +15,12 @@ export type MurojaahContextState = {
     generateQuestions: () => void,
     finish: () => void,
     restart: () => void,
-    reset: () => void
+    reset: () => void,
+    totalQuestions: number | null,
+    setTotalQuestions: (total: number) => void,
+    juz: number | "",
+    setJuz: (juz: number) => void,
+    resetListOfSurah: () => void
 }
 
 export const MurojaahContext = createContext<MurojaahContextState | null>(null)
@@ -26,9 +31,23 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
     const [isStarting, setIsStarting] = useState<boolean>(false)
     const [listOfSurah, setListOfSurah] = useState<Surah[]>([])
     const [interval, setInterval] = useState<number | null>(null)
+    const [totalQuestions, _setTotalQuestion] = useState<number | null>(null)
+    const [juz, _setJuz] = useState<number | "">("")
+
+    const setJuz = (juz: number) => {
+        _setJuz(juz)
+    }
+    
+    const setTotalQuestions = (total: number) => {
+        _setTotalQuestion(total)
+    }
 
     const finish = () => {
         setIsFinish(true)
+    }
+
+    const resetListOfSurah = () => {
+        setListOfSurah([])
     }
 
     const reset = () => {
@@ -83,10 +102,35 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
     }
 
     const generateQuestions = async () => {
-        const questions: Question[] = listOfSurah.map((s: Surah) => {
+        if(totalQuestions === null){
+            return
+        }
+
+        //surah:ayah
+        let questionsTmp: string[] = []
+
+        //loop total questions
+        const questions: Question[] = [...Array(totalQuestions)].map((val, index) => {
+            //get random questions on list of surah range [1,2,3,4,5]
+            const randomSurah = listOfSurah[generateRandomInteger(0, (listOfSurah.length - 1))]
+            let randomAyahOnSurah = generateRandomInteger(1, randomSurah.numberOfAyahs)
+            let isExist = true
+            while(isExist){
+                const key: string = `${randomSurah}:${randomAyahOnSurah}`
+                const isAleadyInArr: string | undefined = questionsTmp.find(keyData => keyData == key)
+                if(typeof isAleadyInArr === "undefined"){
+                    questionsTmp.push(key)
+                    isExist = false
+                    break
+                }
+
+                randomAyahOnSurah = generateRandomInteger(1, randomSurah.numberOfAyahs)
+            }
+
+            //generate random ayah based on surah
             return {
-                surah: s,
-                ayahNumber: generateRandomInteger(1, s.numberOfAyahs)
+                surah: randomSurah,
+                ayahNumber: randomAyahOnSurah
             }
         })
 
@@ -96,10 +140,9 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
         })
 
         const results = await Promise.all(getAyah)
-        console.log(results)
         results.map(result => {
             questions.map(q => {
-                if(q.surah.number === result?.surah.number){
+                if(q.surah.number === result?.surah.number && q.ayahNumber === result?.numberInSurah){
                     q.text = result.text
                 }
             })
@@ -123,7 +166,12 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
             isFinish,
             finish,
             restart,
-            reset
+            reset,
+            totalQuestions,
+            setTotalQuestions,
+            juz,
+            setJuz,
+            resetListOfSurah
         }}>
             { children }
         </MurojaahContext.Provider>
