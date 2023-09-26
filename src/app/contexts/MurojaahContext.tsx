@@ -19,7 +19,7 @@ export type MurojaahContextState = {
     totalQuestions: number | null,
     setTotalQuestions: (total: number) => void,
     juz: number | "",
-    setJuz: (juz: number) => void,
+    setJuz: (juz: number | "") => void,
     resetListOfSurah: () => void
 }
 
@@ -34,7 +34,7 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
     const [totalQuestions, _setTotalQuestion] = useState<number | null>(null)
     const [juz, _setJuz] = useState<number | "">("")
 
-    const setJuz = (juz: number) => {
+    const setJuz = (juz: number | "") => {
         _setJuz(juz)
     }
     
@@ -112,7 +112,7 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
         //loop total questions
         const questions: Question[] = [...Array(totalQuestions)].map((val, index) => {
             //get random questions on list of surah range [1,2,3,4,5]
-            const randomSurah = listOfSurah[generateRandomInteger(0, (listOfSurah.length - 1))]
+            let randomSurah = listOfSurah[generateRandomInteger(0, (listOfSurah.length - 1))]
             let randomAyahOnSurah = generateRandomInteger(1, randomSurah.numberOfAyahs)
             let isExist = true
             while(isExist){
@@ -124,6 +124,7 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
                     break
                 }
 
+                randomSurah = listOfSurah[generateRandomInteger(0, (listOfSurah.length - 1))]
                 randomAyahOnSurah = generateRandomInteger(1, randomSurah.numberOfAyahs)
             }
 

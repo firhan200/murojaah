@@ -13,6 +13,10 @@ export default function JuzSelection(){
     })
 
     const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        if(e.target.value === ""){
+            setJuz("")
+            return
+        }
         setJuz(parseInt(e.target.value))
     }
     
