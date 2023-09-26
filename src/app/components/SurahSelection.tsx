@@ -28,7 +28,7 @@ export default function SurahSelection({ surahs }: SurahSelectionProps){
         async function getSurahInJuz(){
             setLoading(true)
 
-            const res = await fetch(`http://api.alquran.cloud/v1/juz/${juz}/en.asad`)
+            const res = await fetch(`https://api.alquran.cloud/v1/juz/${juz}/en.asad`)
             const data = await res.json() as GetJuzResponse
 
             if(data.code !== 200){
