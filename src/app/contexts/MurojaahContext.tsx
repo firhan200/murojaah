@@ -20,12 +20,15 @@ export type MurojaahContextState = {
     setTotalQuestions: (total: number) => void,
     juz: number | "",
     setJuz: (juz: number | "") => void,
-    resetListOfSurah: () => void
+    resetListOfSurah: () => void,
+    isShowAnswer: boolean,
+    showAnswer: (isShow: boolean) => void
 }
 
 export const MurojaahContext = createContext<MurojaahContextState | null>(null)
 
 export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
+    const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false)
     const [isFinish, setIsFinish] = useState<boolean>(false)
     const [questions, setQuestions] = useState<Question[]>([])
     const [isStarting, setIsStarting] = useState<boolean>(false)
@@ -33,6 +36,10 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
     const [interval, setInterval] = useState<number | null>(null)
     const [totalQuestions, _setTotalQuestion] = useState<number | null>(null)
     const [juz, _setJuz] = useState<number | "">("")
+
+    const showAnswer = (isShow: boolean) => {
+        setIsShowAnswer(isShow)
+    }
 
     const setJuz = (juz: number | "") => {
         _setJuz(juz)
@@ -113,7 +120,7 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
         const questions: Question[] = [...Array(totalQuestions)].map((val, index) => {
             //get random questions on list of surah range [1,2,3,4,5]
             let randomSurah = listOfSurah[generateRandomInteger(0, (listOfSurah.length - 1))]
-            let randomAyahOnSurah = generateRandomInteger(1, randomSurah.numberOfAyahs)
+            let randomAyahOnSurah = generateRandomInteger(1, (randomSurah.numberOfAyahs - 1)) //dont get till last ayah
             let isEnough = false
             const maxLoop = 10
             let counter = 0
@@ -146,12 +153,24 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
         questions.map(q => {
             getAyah.push(getTextFromSurahAndAyah(q.surah.number, q.ayahNumber))
         })
-
         const results = await Promise.all(getAyah)
         results.map(result => {
             questions.map(q => {
                 if(q.surah.number === result?.surah.number && q.ayahNumber === result?.numberInSurah){
                     q.text = result.text
+                }
+            })
+        })
+
+        const getNextAyah: Promise<Ayah | null>[] = []
+        questions.map(q => {
+            getNextAyah.push(getTextFromSurahAndAyah(q.surah.number, q.ayahNumber + 1)) //get next ayah
+        })
+        const nextAyahResults = await Promise.all(getNextAyah)
+        nextAyahResults.map(result => {
+            questions.map(q => {
+                if(q.surah.number === result?.surah.number && q.ayahNumber === (result?.numberInSurah - 1)){
+                    q.nextAyahText = result.text
                 }
             })
         })
@@ -179,7 +198,9 @@ export const MurojaahProvider = ({children} : {children: React.ReactNode}) => {
             setTotalQuestions,
             juz,
             setJuz,
-            resetListOfSurah
+            resetListOfSurah,
+            isShowAnswer,
+            showAnswer
         }}>
             { children }
         </MurojaahContext.Provider>

@@ -10,7 +10,8 @@ export type Surah = {
 export type Question = {
     surah: Surah,
     ayahNumber: number,
-    text?: string
+    text?: string,
+    nextAyahText?: string
 }
 
 export type GetAyahResponse = {

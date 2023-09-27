@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState } from "react"
+import useMurojaah from "../hooks/useMurojaah"
 
 export default function TimeTrack({ max, onTimesUp, position }: { max: number, onTimesUp: () => void, position: number }) {
+    const { showAnswer } = useMurojaah()
     const [progress, setProgress] = useState<number>(0)
 
     useEffect(() => {
@@ -11,8 +13,12 @@ export default function TimeTrack({ max, onTimesUp, position }: { max: number, o
 
     useEffect(() => {
         if (progress >= max) {
-            onTimesUp()
-            setProgress(0)
+            showAnswer(true)
+            setTimeout(() => {
+                showAnswer(false)
+                setProgress(0)
+                onTimesUp()
+            }, 3000)
             return
         }
 

@@ -1,15 +1,14 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import useMurojaah from "../hooks/useMurojaah"
 import QuestionCard from "./QuestionCard"
 import TimeTrack from "./TimeTrack"
 import QuestionTracker from "./QuestionTracker"
 
 export default function MurojaahGenerator(){
-    const { isStarting, questions, interval, isFinish, finish } = useMurojaah()
+    const { isStarting, questions, interval, isFinish, finish, showAnswer } = useMurojaah()
     const [currentPosition, setCurrentPosition] = useState<number>(0);
-    const [resetTime, setResetTime] = useState<number>(0);
 
     if(!isStarting || interval === null || isFinish){
         return
@@ -23,6 +22,7 @@ export default function MurojaahGenerator(){
 
     const finishMurojaah = () => {
         setCurrentPosition(0)
+        showAnswer(false)
         finish()
     }
 
@@ -32,7 +32,7 @@ export default function MurojaahGenerator(){
             return
         }
 
-
+        showAnswer(false)
         setCurrentPosition(currentPosition + 1)
     }
 
